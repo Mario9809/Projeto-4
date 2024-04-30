@@ -36,18 +36,18 @@ ERROS Novo_cliente(Cliente cliente[], int *pos) {
     clearBuffer();
 
     (*pos)++;
-    printf("Novo CLiente cadastrado com sucesso!!\n");
+    printf("Novo cliente cadastrado com sucesso!!\n");
     return OK;
 }
 
-ERROS listar(Cliente cliente[], int *pos) {
+ERROS Listar_clientes(Cliente cliente[], int *pos) {
     if (*pos == 0) {
         return SEM_CLIENTES;
     }
 
     printf("Lista de Clientes:\n");
     for (int i = 0; i < *pos; i++) {
-        printf("Nome: %s %s, CPF: %s, Tipo de conta: %s, Saldo Atual: %s\n" , cientes[i].Nome, cientes[i].CPF, clentes[i].Tipo_de_conta, clientes[i].Saldo_atual);
+        printf("Nome: %s %s, CPF: %s, Tipo de conta: %s, Saldo Atual: %s\n" , cliente[i].Nome, cliente[i].CPF, cliente[i].Tipo_de_conta, cliente[i].Saldo_atual);
     }
 
     return OK;
@@ -55,20 +55,20 @@ ERROS listar(Cliente cliente[], int *pos) {
 
 ERROS Apagar_cliente(Cliente cliente[], int *pos) {
     if (*pos == 0) {
-        return SEM_CONTATOS;
+        return SEM_CLIENTES;
     }
 
-    char telefone[TAM_TELEFONE];
+    char cpf[TAM_CPF];
     printf("Digite o número de telefone do contato que deseja deletar: ");
-    scanf("%15s", telefone);
+    scanf("%15s", CPF);
     clearBuffer();
 
     int encontrado = 0;
     for (int i = 0; i < *pos; i++) {
-        if (strcmp(agenda[i].Telefone, telefone) == 0) {
+        if (strcmp(cliente[i].CPF, cpf) == 0) {
             encontrado = 1;
             for (int j = i; j < *pos - 1; j++) {
-                agenda[j] = agenda[j + 1];
+                cliente[j] = cliente[j + 1];
             }
             (*pos)--;
             break;
@@ -78,26 +78,20 @@ ERROS Apagar_cliente(Cliente cliente[], int *pos) {
     return encontrado ? OK : NAO_ENCONTRADO;
 }
 
-ERROS salvar(Agenda agenda[], int *pos) {
-    FILE *arquivo = fopen(FILENAME, "wb");
-    if (arquivo == NULL) {
-        return NAO_ENCONTRADO;
-    }
-
-    fwrite(agenda, sizeof(Agenda), *pos, arquivo);
-    fclose(arquivo);
-    printf("Agenda salva com sucesso!!\n");
-    return OK;
+ERROS Débito(Cliente cliente[], int *pos) {
+    
+   
 }
 
-ERROS carregar(Agenda agenda[], int *pos) {
-    FILE *arquivo = fopen(FILENAME, "rb");
-    if (arquivo == NULL) {
-        return NAO_ENCONTRADO;
-    }
+ERROS Depósito(Cliente cliente[], int *pos) {
+    
+}
 
-    *pos = fread(agenda, sizeof(Agenda), TOTAL, arquivo);
-    fclose(arquivo);
-    printf("Agenda carregada com sucesso!!\n");
-    return OK;
+
+ERROS Extrato(Cliente cliente[], int *pos) {
+    
+}
+
+ERROS Transferência_entre_contas(Cliente cliente[], int *pos) {
+    
 }

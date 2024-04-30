@@ -7,8 +7,11 @@ int main() {
    
 
     Cliente cliente[TOTAL];
+    //Cria uma array do tipo Cliente com o nome cliente com o máximo de elementos definido pelo total
     int pos;
-    ERROS erro = carregar(cliente, &pos); 
+    //declara uma variável para contador com o nome pos
+    ERROS erro = carregar(cliente, &pos);
+    // declara uma variável do tipo ERROS com o nome erro, utilizada a função carregar para acessar um elemento da array cliente na posição dada pelo ponteiro. 
     if (erro != OK)
         pos = 0;
 
@@ -43,7 +46,7 @@ int main() {
 
           case 3:
 
-              Listar_cientes(cliente, &pos);
+              Listar_clientes(cliente, &pos);
 
               break;
 
