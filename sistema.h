@@ -17,3 +17,16 @@ typedef enum {OK, MAX_CLIENTES, SEM_CLIENTES, NAO_ENCONTRADO, SENHA} ERROS;
 typedef ERROS (*funcao)(Cliente[], int*);
 
 
+ERROS Novo_cliente(Cliente cliente[], int *pos) 
+
+ERROS Listar_clientes(Cliente cliente[], int *pos)
+
+ERROS Apagar_cliente(Cliente cliente[], int *pos) 
+
+ERROS Débito(Cliente cliente[], int *pos) 
+
+ERROS Depósito(Cliente cliente[], int *pos)
+
+ERROS Extrato(Cliente cliente[], int *pos)
+    
+ERROS Transferência_entre_contas(Cliente cliente[], int *pos)
