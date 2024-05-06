@@ -4,7 +4,7 @@
 
 
 int main() {
-   
+
 
     Cliente cliente[TOTAL];
     //Cria uma array do tipo Cliente com o nome cliente com o máximo de elementos definido pelo total
@@ -52,13 +52,13 @@ int main() {
 
           case 4:
 
-              Débito(cliente, &pos);
+              Debito(cliente, &pos);
 
               break;
 
           case 5:
 
-              Depósito(cliente, &pos);
+              Deposito(cliente, &pos);
 
               break;
 
@@ -70,7 +70,7 @@ int main() {
 
           case 7:
 
-              Transferência_entre_contas(cliente, &pos);
+              Transferencia_entre_contas(cliente, &pos);
 
               break;   
 
