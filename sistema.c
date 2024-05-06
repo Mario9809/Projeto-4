@@ -59,8 +59,8 @@ ERROS Apagar_cliente(Cliente cliente[], int *pos) {
     }
 
     char cpf[TAM_CPF];
-    printf("Digite o número de telefone do contato que deseja deletar: ");
-    scanf("%15s", CPF);
+    printf("Digite o número do CPF do cliente que deseja deletar: ");
+    scanf("%15s", cpf);
     clearBuffer();
 
     int encontrado = 0;
@@ -78,20 +78,28 @@ ERROS Apagar_cliente(Cliente cliente[], int *pos) {
     return encontrado ? OK : NAO_ENCONTRADO;
 }
 
-ERROS Débito(Cliente cliente[], int *pos) {
-    
-   
+ERROS Debito(Cliente cliente[], int *pos) {
+    printf("Digite o número do CPF do cliente que deseja debitar: ");
+    return 0;
 }
 
-ERROS Depósito(Cliente cliente[], int *pos) {
-    
+ERROS Deposito(Cliente cliente[], int *pos) {
+    printf(" ");
+    return 0;
 }
 
 
 ERROS Extrato(Cliente cliente[], int *pos) {
-    
+    printf(" ");
+    return 0;
 }
 
-ERROS Transferência_entre_contas(Cliente cliente[], int *pos) {
-    
+ERROS Transferencia_entre_contas(Cliente cliente[], int *pos) {
+    printf(" ");
+    return 0;
+}
+
+ERROS carregar(Cliente cliente[], int *pos) {
+    printf(" ");
+    return 0;
 }
