@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define FILENAME "cliente.bin"
-#define FILENAME "extrato.bin"
+#define FILENAME1 "extrato.bin"
 
 void clearBuffer() {
     int c;
@@ -19,20 +19,24 @@ ERROS Novo_cliente(Cliente cliente[], int *pos) {
     scanf("%299s", cliente[*pos].Nome);
     clearBuffer();
 
-    printf("Digite o CPF: ");
-    scanf("%299s", cliente[*pos].CPF);
+    printf("Digite o Sobrenome: ");
+    scanf("%299s", cliente[*pos].Sobrenome);
     clearBuffer();
 
-    printf("Digite o tipo de conta: ");
+    printf("Digite o CPF: ");
+    scanf("%d", &cliente[*pos].CPF);
+    clearBuffer();
+
+    printf("Digite o tipo de conta (Comum ou Plus): ");
     scanf("%299s", cliente[*pos].Tipo_de_conta);
     clearBuffer();
 
     printf("Digite o saldo inicial da conta: ");
-    scanf("%299s", cliente[*pos].Saldo_inicial);
+    scanf("%d", &cliente[*pos].Saldo_inicial);
     clearBuffer();
 
     printf("Crie uma senha: ");
-    scanf("%15s", cliente[*pos].Senha);
+    scanf("%15s", &cliente[*pos].Senha);
     clearBuffer();
 
     (*pos)++;
@@ -47,7 +51,7 @@ ERROS Listar_clientes(Cliente cliente[], int *pos) {
 
     printf("Lista de Clientes:\n");
     for (int i = 0; i < *pos; i++) {
-        printf("Nome: %s %s, CPF: %s, Tipo de conta: %s, Saldo Atual: %s\n" , cliente[i].Nome, cliente[i].CPF, cliente[i].Tipo_de_conta, cliente[i].Saldo_atual);
+        printf("Nome: %s, Sobrenome: %s, CPF: %d, Tipo de conta: %s, Saldo Atual: %d\n" , cliente[i].Nome, cliente[i].Sobrenome, cliente[i].CPF, cliente[i].Tipo_de_conta, cliente[i].Saldo_atual);
     }
 
     return OK;
@@ -58,14 +62,14 @@ ERROS Apagar_cliente(Cliente cliente[], int *pos) {
         return SEM_CLIENTES;
     }
 
-    char cpf[TAM_CPF];
+    int cpf;
     printf("Digite o número do CPF do cliente que deseja deletar: ");
-    scanf("%15s", cpf);
+    scanf("%d", &cpf);
     clearBuffer();
 
     int encontrado = 0;
     for (int i = 0; i < *pos; i++) {
-        if (strcmp(cliente[i].CPF, cpf) == 0) {
+        if (cliente[i].CPF == cpf) {
             encontrado = 1;
             for (int j = i; j < *pos - 1; j++) {
                 cliente[j] = cliente[j + 1];
@@ -79,8 +83,18 @@ ERROS Apagar_cliente(Cliente cliente[], int *pos) {
 }
 
 ERROS Debito(Cliente cliente[], int *pos) {
-    printf("Digite o número do CPF do cliente que deseja debitar: ");
-    return 0;
+    
+    int cpf;
+    printf("Digite o número do CPF do cliente que deseja      debitar: ");
+    
+    scanf("%d", &cpf);
+    clearBuffer();
+    int encontrado = 0;
+    for (int i = 0; i < *pos; i++) {
+        if (cliente[i].CPF == cpf) {
+            
+            
+    
 }
 
 ERROS Deposito(Cliente cliente[], int *pos) {
