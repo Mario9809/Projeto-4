@@ -11,7 +11,9 @@ int main() {
     int pos;
     //declara uma variável para contador com o nome pos
     ERROS erro = carregar(cliente, &pos);
-    // declara uma variável do tipo ERROS com o nome erro, utilizada a função carregar para acessar um elemento da array cliente na posição dada pelo ponteiro. 
+    // declara uma variável do tipo ERROS com o nome erro, utilizada a função carregar para acessar um elemento da array cliente na posição dada pelo ponteiro.
+
+  
     if (erro != OK)
         pos = 0;
 
