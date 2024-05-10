@@ -180,16 +180,75 @@ ERROS Deposito(Cliente cliente[], int *pos) {
 
 
 ERROS Extrato(Cliente cliente[], int *pos) {
-    printf(" ");
-    return 0;
+    
 }
 
 ERROS Transferencia_entre_contas(Cliente cliente[], int *pos) {
-    printf(" ");
-    return 0;
+    int cpf_origem, cpf_destino;
+    printf("Digite o número do CPF da conta de origem: ");
+    scanf("%d", &cpf_origem);
+    clearBuffer();
+
+    char senha[16];
+    printf("Digite a senha da conta de origem: ");
+    scanf("%15s", senha);
+    clearBuffer();
+
+    int encontrado_origem = 0;
+    int indice_origem;
+
+    for (int i = 0; i < *pos; i++) {
+        if (cliente[i].CPF == cpf_origem && strcmp(cliente[i].Senha, senha) == 0) {
+            encontrado_origem = 1;
+            indice_origem = i;
+            break;
+        }
+    }
+
+    if (!encontrado_origem) {
+        printf("Conta de origem não encontrada ou senha incorreta.\n");
+        return 0;
+    }
+
+    printf("Digite o número do CPF da conta de destino: ");
+    scanf("%d", &cpf_destino);
+    clearBuffer();
+
+    float valor;
+    printf("Digite o valor a ser transferido: ");
+    scanf("%f", &valor);
+    clearBuffer();
+
+    int encontrado_destino = 0;
+    int indice_destino;
+
+    for (int i = 0; i < *pos; i++) {
+        if (cliente[i].CPF == cpf_destino) {
+            encontrado_destino = 1;
+            indice_destino = i;
+            break;
+        }
+    }
+
+    if (!encontrado_destino) {
+        printf("Conta de destino não encontrada.\n");
+        return 0;
+    }
+
+    if (cliente[indice_origem].Saldo_atual - valor >= 0) {
+        cliente[indice_origem].Saldo_atual -= valor;
+        cliente[indice_destino].Saldo_atual += valor;
+        printf("Transferência realizada com sucesso!\n");
+        return OK;
+    } else {
+        printf("Saldo insuficiente para realizar a transferência.\n");
+        return 0;
+    }
 }
+
 
 ERROS carregar(Cliente cliente[], int *pos) {
     printf(" ");
     return 0;
 }
+
