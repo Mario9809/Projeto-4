@@ -156,9 +156,27 @@ ERROS Debito(Cliente cliente[], int *pos) {
 
 
 ERROS Deposito(Cliente cliente[], int *pos) {
-    printf(" ");
+    int cpf;
+    printf("Digite o número do CPF do cliente que deseja depositar: ");
+    scanf("%d", &cpf);
+    clearBuffer();
+
+    float valor;
+    printf("Digite o valor a ser depositado: ");
+    scanf("%f", &valor);
+    clearBuffer();
+
+    for (int i = 0; i < *pos; i++) {
+        if (cliente[i].CPF == cpf) {
+            cliente[i].Saldo_atual += valor;
+            printf("Depósito realizado com sucesso!\n");
+            return OK;
+        }
+    }
+    printf("CPF incorreto.\n");
     return 0;
 }
+
 
 
 ERROS Extrato(Cliente cliente[], int *pos) {
