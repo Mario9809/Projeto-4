@@ -1,14 +1,11 @@
 #include "sistema.h"
 
-
 #define FILENAME "cliente.bin"
-#define FILENAME1 "extrato.bin"
 
 void clearBuffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
-
 
 void registrarOperacao(Cliente *cliente, float valor) {
     if (cliente->num_operacoes < MAX_OPERACOES) {
@@ -103,11 +100,11 @@ ERROS Apagar_cliente(Cliente cliente[], int *pos) {
             break;
         }
     }
-     printf("contato deletado com sucesso!!\n");
+    printf("contato deletado com sucesso!!\n");
     return encontrado ? OK : NAO_ENCONTRADO;
 }
 
-ERROS Debito(Cliente cliente[], int *pos)             {
+ERROS Debito(Cliente cliente[], int *pos) {
     int cpf;
     printf("Digite o número do CPF do cliente: ");
     scanf("%d", &cpf);
