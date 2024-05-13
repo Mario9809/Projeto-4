@@ -1,11 +1,21 @@
 #include "sistema.h"
 
+
 #define FILENAME "cliente.bin"
 #define FILENAME1 "extrato.bin"
 
 void clearBuffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
+}
+
+
+void registrarOperacao(Cliente *cliente, float valor) {
+    if (cliente->num_operacoes < MAX_OPERACOES) {
+        cliente->operacoes[cliente->num_operacoes++] = valor;
+    } else {
+        printf("Limite de operações excedido.\n");
+    }
 }
 
 ERROS Novo_cliente(Cliente cliente[], int *pos) {
@@ -52,13 +62,12 @@ ERROS Novo_cliente(Cliente cliente[], int *pos) {
 
     // Atualizar o saldo atual com o saldo inicial
     cliente[*pos].Saldo_atual = cliente[*pos].Saldo_inicial;
+    cliente[*pos].num_operacoes = 0; // Inicializar o número de operações
 
     (*pos)++;
     printf("Novo cliente cadastrado com sucesso!!\n");
     return OK;
 }
-
-
 
 ERROS Listar_clientes(Cliente cliente[], int *pos) {
     if (*pos == 0) {
@@ -98,7 +107,7 @@ ERROS Apagar_cliente(Cliente cliente[], int *pos) {
     return encontrado ? OK : NAO_ENCONTRADO;
 }
 
-ERROS Debito(Cliente cliente[], int *pos) {
+ERROS Debito(Cliente cliente[], int *pos)             {
     int cpf;
     printf("Digite o número do CPF do cliente: ");
     scanf("%d", &cpf);
@@ -147,13 +156,13 @@ ERROS Debito(Cliente cliente[], int *pos) {
     }
 
     cliente[indice_cliente].Saldo_atual = novo_saldo; // Atualiza o saldo atual
+    registrarOperacao(&cliente[indice_cliente], -valor); // Registra a operação de débito
 
     printf("Débito de %.2f realizado com sucesso!\n", valor);
     printf("Saldo anterior: %.2f\n", saldo_anterior);
     printf("Novo saldo: %.2f\n", novo_saldo);
     return OK;
 }
-
 
 ERROS Deposito(Cliente cliente[], int *pos) {
     int cpf;
@@ -166,21 +175,74 @@ ERROS Deposito(Cliente cliente[], int *pos) {
     scanf("%f", &valor);
     clearBuffer();
 
+    int indice_cliente = -1;
     for (int i = 0; i < *pos; i++) {
         if (cliente[i].CPF == cpf) {
-            cliente[i].Saldo_atual += valor;
-            printf("Depósito realizado com sucesso!\n");
-            return OK;
+            indice_cliente = i;
+            break;
         }
     }
-    printf("CPF incorreto.\n");
-    return 0;
+
+    if (indice_cliente == -1) {
+        printf("CPF incorreto.\n");
+        return NAO_ENCONTRADO;
+    }
+
+    float saldo_anterior = cliente[indice_cliente].Saldo_atual; // Salva o saldo anterior
+    float novo_saldo = saldo_anterior; // Cria uma variável para o novo saldo
+
+    cliente[indice_cliente].Saldo_atual += valor; // Realiza o depósito
+    registrarOperacao(&cliente[indice_cliente], valor); // Registra a operação de depósito
+
+    printf("Depósito de %.2f realizado com sucesso!\n", valor);
+    printf("Saldo anterior: %.2f\n", saldo_anterior);
+    printf("Novo saldo: %.2f\n", cliente[indice_cliente].Saldo_atual);
+    return OK;
 }
 
-
-
 ERROS Extrato(Cliente cliente[], int *pos) {
-    
+    int cpf;
+    printf("Digite o número do CPF do cliente: ");
+    scanf("%d", &cpf);
+    clearBuffer();
+
+    int indice_cliente = -1;
+    for (int i = 0; i < *pos; i++) {
+        if (cliente[i].CPF == cpf) {
+            indice_cliente = i;
+            break;
+        }
+    }
+
+    if (indice_cliente == -1) {
+        printf("CPF incorreto.\n");
+        return NAO_ENCONTRADO;
+    }
+
+    printf("Extrato da conta de CPF %d:\n", cliente[indice_cliente].CPF);
+    printf("----------------------------------------\n");
+
+    printf("Saldo inicial: %.2f\n", cliente[indice_cliente].Saldo_inicial);
+
+    if (cliente[indice_cliente].num_operacoes == 0) {
+        printf("Nenhuma operação realizada.\n");
+    } else {
+        printf("Operações realizadas:\n");
+        float saldo_atual = cliente[indice_cliente].Saldo_inicial;
+        for (int i = 0; i < cliente[indice_cliente].num_operacoes; i++) {
+            if (cliente[indice_cliente].operacoes[i] > 0) {
+                printf("Operação %d: Depósito de %.2f (+)\n", i + 1, cliente[indice_cliente].operacoes[i]);
+                saldo_atual += cliente[indice_cliente].operacoes[i];
+            } else {
+                printf("Operação %d: Débito de %.2f (-)\n", i + 1, -cliente[indice_cliente].operacoes[i]);
+                saldo_atual -= cliente[indice_cliente].operacoes[i];
+            }
+        }
+        printf("----------------------------------------\n");
+        printf("Saldo atual: %.2f\n", saldo_atual);
+    }
+
+    return OK;
 }
 
 ERROS Transferencia_entre_contas(Cliente cliente[], int *pos) {
@@ -207,16 +269,11 @@ ERROS Transferencia_entre_contas(Cliente cliente[], int *pos) {
 
     if (!encontrado_origem) {
         printf("Conta de origem não encontrada ou senha incorreta.\n");
-        return 0;
+        return SENHA;
     }
 
     printf("Digite o número do CPF da conta de destino: ");
     scanf("%d", &cpf_destino);
-    clearBuffer();
-
-    float valor;
-    printf("Digite o valor a ser transferido: ");
-    scanf("%f", &valor);
     clearBuffer();
 
     int encontrado_destino = 0;
@@ -232,23 +289,68 @@ ERROS Transferencia_entre_contas(Cliente cliente[], int *pos) {
 
     if (!encontrado_destino) {
         printf("Conta de destino não encontrada.\n");
-        return 0;
+        return NAO_ENCONTRADO;
     }
+
+    float valor;
+    printf("Digite o valor a ser transferido: ");
+    scanf("%f", &valor);
+    clearBuffer();
 
     if (cliente[indice_origem].Saldo_atual - valor >= 0) {
+        float saldo_anterior_origem = cliente[indice_origem].Saldo_atual;
+        float saldo_anterior_destino = cliente[indice_destino].Saldo_atual;
+
         cliente[indice_origem].Saldo_atual -= valor;
         cliente[indice_destino].Saldo_atual += valor;
-        printf("Transferência realizada com sucesso!\n");
+
+        registrarOperacao(&cliente[indice_origem], -valor); // Registrar operação na conta de origem
+        registrarOperacao(&cliente[indice_destino], valor); // Registrar operação na conta de destino
+
+        printf("Transferência de %.2f realizada com sucesso!\n", valor);
+        printf("Saldo anterior da conta de origem: %.2f\n", saldo_anterior_origem);
+        printf("Novo saldo da conta de origem: %.2f\n", cliente[indice_origem].Saldo_atual);
+        printf("Saldo anterior da conta de destino: %.2f\n", saldo_anterior_destino);
+        printf("Novo saldo da conta de destino: %.2f\n", cliente[indice_destino].Saldo_atual);
         return OK;
     } else {
-        printf("Saldo insuficiente para realizar a transferência.\n");
-        return 0;
+        printf("Saldo insuficiente na conta de origem para realizar a transferência.\n");
+        return SALDO_INSUFICIENTE;
     }
 }
 
-
 ERROS carregar(Cliente cliente[], int *pos) {
-    printf(" ");
-    return 0;
+    FILE *arquivo = fopen(FILENAME, "rb");
+    if (!arquivo) {
+        return NAO_ENCONTRADO;
+    }
+
+    *pos = 0;
+    while (fread(&cliente[*pos], sizeof(Cliente), 1, arquivo)) {
+        (*pos)++;
+        if (*pos >= TOTAL) {
+            fclose(arquivo);
+            return OK;
+        }
+    }
+
+    fclose(arquivo);
+    return OK;
 }
 
+ERROS salvar(Cliente cliente[], int pos) {
+    FILE *arquivo = fopen(FILENAME, "wb");
+    if (!arquivo) {
+        return ERRO_ABRIR_ARQUIVO;
+    }
+
+    for (int i = 0; i < pos; i++) {
+        if (fwrite(&cliente[i], sizeof(Cliente), 1, arquivo) != 1) {
+            fclose(arquivo);
+            return ERRO_ESCREVER_ARQUIVO;
+        }
+    }
+
+    fclose(arquivo);
+    return OK;
+}
