@@ -5,7 +5,8 @@
 int main() {
     Cliente cliente[TOTAL];
     int pos;
-    ERROS erro = carregar(cliente, &pos);
+    ERROS erro = carregar(cliente, &pos); // Carregar os dados dos clientes do arquivo
+
     if (erro != OK)
         pos = 0;
 
@@ -26,24 +27,29 @@ int main() {
         switch (opcao) {
             case 1:
                 Novo_cliente(cliente, &pos);
+                salvar(cliente, pos); // Salvar os dados após cadastrar novo cliente
                 break;
             case 2:
                 Apagar_cliente(cliente, &pos);
+                salvar(cliente, pos); // Salvar os dados após apagar cliente
                 break;
             case 3:
                 Listar_clientes(cliente, &pos);
                 break;
             case 4:
                 Debito(cliente, &pos);
+                salvar(cliente, pos); // Salvar os dados após débito
                 break;
             case 5:
                 Deposito(cliente, &pos);
+                salvar(cliente, pos); // Salvar os dados após depósito
                 break;
             case 6:
                 Extrato(cliente, &pos);
                 break;
             case 7:
                 Transferencia_entre_contas(cliente, &pos);
+                salvar(cliente, pos); // Salvar os dados após transferência
                 break;
             case 0:
                 printf("Saindo...\n");
@@ -52,11 +58,6 @@ int main() {
                 printf("Escolha inválida.\n");
         }
     } while (opcao != 0);
-
-    // Salvando os dados no arquivo antes de sair
-    erro = salvar(cliente, pos);
-    if (erro != OK)
-        printf("Erro ao salvar os dados no arquivo.\n");
 
     return 0;
 }
